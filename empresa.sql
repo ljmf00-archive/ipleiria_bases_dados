@@ -1,38 +1,39 @@
+-- iniciar tabelas
 DROP TABLE historico_funcao;
 DROP TABLE empregado;
 DROP TABLE departamento;
 DROP TABLE escala_salarial;
 
 CREATE TABLE departamento(
-	numdep		INTEGER		PRIMARY KEY,
-	nomedep		VARCHAR2(20),
-	localizacao	VARCHAR2(20)
+	numdep      INTEGER PRIMARY KEY,
+	nomedep     VARCHAR2(20),
+	localizacao VARCHAR2(20)
 );
 
 CREATE TABLE empregado(
-	numemp		INTEGER		PRIMARY KEY,
-	nomeemp		VARCHAR2(20),
-	funcao		VARCHAR2(20),
-	chefe		INTEGER REFERENCES empregado(numemp),
-	dtaContratacao	DATE,
-	salario		INTEGER,
-	comissao	INTEGER,
-	numdep		INTEGER REFERENCES departamento(numdep)
+	numemp         INTEGER PRIMARY KEY,
+	nomeemp        VARCHAR2(20),
+	funcao         VARCHAR2(20),
+	chefe          INTEGER REFERENCES empregado(numemp),
+	dtaContratacao DATE,
+	salario        INTEGER,
+	comissao       INTEGER,
+	numdep         INTEGER REFERENCES departamento(numdep)
 );
 
 CREATE TABLE escala_salarial(
-	escala		INTEGER		PRIMARY KEY,
-	minsal		NUMBER(5),
-	maxsal		NUMBER(5)
+	escala INTEGER PRIMARY KEY,
+	minsal NUMBER(5),
+	maxsal NUMBER(5)
 );
 
 CREATE TABLE historico_funcao (
-	IDhist		INTEGER		PRIMARY KEY, 
-	numemp		INTEGER		REFERENCES empregado(numemp),
-	funcao		VARCHAR2(20),
-	dtaInicio	DATE,
-	dtaFim		DATE,
-	numdep		INTEGER		REFERENCES departamento(numdep)
+	IDhist    INTEGER PRIMARY KEY, 
+	numemp    INTEGER REFERENCES empregado(numemp),
+	funcao    VARCHAR2(20),
+	dtaInicio DATE,
+	dtaFim    DATE,
+	numdep    INTEGER REFERENCES departamento(numdep)
 );
 
 INSERT INTO departamento (numdep,nomedep,localizacao) VALUES (10,'Contabilidade','Lisboa');
@@ -92,109 +93,136 @@ VALUES (586, 7788, 'Vendedor', TO_DATE('19-04-1987','dd-mm-yyyy'),TO_DATE('02-11
 
 COMMIT;
 
+-- fichas
+
 -- ficha 1
 
 -- ex3
-SELECT DISTINCT funcao FROM empregado
-  ORDER BY funcao ASC;
-  
+SELECT DISTINCT funcao
+FROM empregado
+ORDER BY funcao ASC;
+
 -- ex4
-SELECT nomeemp, salario, NVL(TO_CHAR(comissao), 'Nao existe') AS "comissao" FROM empregado
-  ORDER BY salario DESC, nomeemp ASC;
-  
+SELECT
+	nomeemp,
+	salario,
+	NVL(TO_CHAR(comissao), 'Nao existe') AS "comissao"
+FROM empregado
+ORDER BY
+	salario DESC,
+	nomeemp ASC;
+
 -- ex 8
-SELECT 'O ' || UPPER(nomeemp) || ' ganha ' || salario || ' mas queria ganhar ' || salario * 3 AS "salarios" FROM empregado;
+SELECT 'O ' || UPPER(nomeemp) || ' ganha ' || salario || ' mas queria ganhar ' || salario * 3 AS "salarios"
+FROM empregado;
 
 -- ex 9
-SELECT nomeemp, salario, comissao FROM empregado
-  WHERE comissao IS NOT NULL AND comissao > salario
-  ORDER BY nomeemp ASC;
+SELECT
+	nomeemp,
+	salario,
+	comissao
+FROM empregado
+WHERE comissao IS NOT NULL AND comissao > salario
+ORDER BY nomeemp ASC;
 
 -- ex 15
-SELECT nomeemp FROM empregado
-  WHERE UPPER(nomeemp) LIKE '%O%'
-  ORDER BY nomeemp ASC;
-  
+SELECT nomeemp
+FROM empregado
+WHERE UPPER(nomeemp) LIKE '%O%'
+ORDER BY nomeemp ASC;
+	
 -- ex 17
 
-SELECT nomeemp FROM empregado
-  WHERE NOT UPPER(nomeemp) LIKE '%O%';
-  
+SELECT nomeemp
+FROM empregado
+WHERE NOT UPPER(nomeemp) LIKE '%O%';
+
 -- ex 20
-SELECT nomeemp, salario FROM empregado
-  WHERE comissao IS NULL AND salario > 3000;
+SELECT
+	nomeemp,
+	salario
+FROM empregado
+WHERE comissao IS NULL AND salario > 3000;
 
 -- ex 22
 SELECT
-  nomeemp,
-  TO_CHAR(dtacontratacao, 'DD-MM-YYYY') AS "Data de Contratacao",
-  ADD_MONTHS(dtacontratacao, 12) AS "Data revisao"
+	nomeemp,
+	TO_CHAR(dtacontratacao, 'DD-MM-YYYY') AS "Data de Contratacao",
+	ADD_MONTHS(dtacontratacao, 12) AS "Data revisao"
 FROM empregado
 ORDER BY nomeemp ASC;
 
 -- ex 24
 SELECT
-  nomeemp,
-  (salario * 14) + NVL(comissao, 0) AS "REMUNERACAO ANUAL"
+	nomeemp,
+	(salario * 14) + NVL(comissao, 0) AS "REMUNERACAO ANUAL"
 FROM empregado
 ORDER BY nomeemp ASC;
 
 -- ex 25
 SELECT
-  nomeemp,
-  CASE
-    WHEN salario < 1500 THEN 'Menor que 1500'
-    WHEN salario > 1500 THEN TO_CHAR(salario)
-    ELSE 'Valor Exato'
-  END AS "SAL"
+	nomeemp,
+	CASE
+		WHEN salario < 1500 THEN 'Menor que 1500'
+		WHEN salario > 1500 THEN TO_CHAR(salario)
+		ELSE 'Valor Exato'
+	END AS "SAL"
 FROM empregado
 ORDER BY nomeemp;
 
 -- ficha 2
 
 -- ex1
-SELECT e.nomeemp, e.numdep, d.nomedep, d.localizacao
-  FROM empregado e
-    JOIN departamento d ON e.numdep = d.numdep;
+SELECT
+	e.nomeemp,
+	e.numdep,
+	d.nomedep,
+	d.localizacao
+FROM empregado e
+JOIN departamento d ON e.numdep = d.numdep;
 
 -- ex2
-SELECT e.nomeemp AS "NOME_EMP", e.salario, d.nomedep, d.localizacao
-  FROM empregado e
-    JOIN departamento d ON e.numdep = d.numdep
-  WHERE e.salario > 1500
-  ORDER BY e.nomeemp ASC;
-  
+SELECT
+	e.nomeemp AS "NOME_EMP",
+	e.salario,
+	d.nomedep,
+	d.localizacao
+FROM empregado e
+JOIN departamento d ON e.numdep = d.numdep
+WHERE e.salario > 1500
+ORDER BY e.nomeemp ASC;
+	
 -- ex3
 SELECT
-  e.nomeemp AS "NOME",
-  h.funcao,
-  TO_CHAR(h.dtainicio, 'DD-Mon-YYYY') AS "DATAINICIO",
-  TO_CHAR(h.dtafim, 'DD-MON-YYYY') AS "DATAFIM",
-  d.nomedep AS "DEPARTAMENTO"
+	e.nomeemp AS "NOME",
+	h.funcao,
+	TO_CHAR(h.dtainicio, 'DD-Mon-YYYY') AS "DATAINICIO",
+	TO_CHAR(h.dtafim, 'DD-MON-YYYY') AS "DATAFIM",
+	d.nomedep AS "DEPARTAMENTO"
 FROM empregado e
-  JOIN historico_funcao h ON e.numemp = h.numemp
-  JOIN departamento d ON h.numdep = d.numdep
+	JOIN historico_funcao h ON e.numemp = h.numemp
+	JOIN departamento d ON h.numdep = d.numdep
 ORDER BY
-  e.nomeemp ASC,
-  h.dtafim DESC;
+	e.nomeemp ASC,
+	h.dtafim DESC;
 
 -- ex4
 SELECT
-  e.nomeemp AS "NOME_EMP",
-  e.funcao,
-  e.salario,
-  es.escala
+	e.nomeemp AS "NOME_EMP",
+	e.funcao,
+	e.salario,
+	es.escala
 FROM empregado e
 JOIN escala_salarial es ON es.minsal <= e.salario AND es.maxsal >= e.salario
 ORDER BY e.salario DESC;
 
 -- ex6
 SELECT
-  e.nomeemp,
-  e.funcao,
-  e.salario,
-  es.escala,
-  d.nomedep
+	e.nomeemp,
+	e.funcao,
+	e.salario,
+	es.escala,
+	d.nomedep
 FROM empregado e
 JOIN escala_salarial es ON es.minsal <= e.salario AND es.maxsal >= e.salario
 JOIN departamento d ON d.numdep = e.numdep
@@ -203,19 +231,19 @@ ORDER BY e.salario DESC, e.nomeemp DESC;
 
 -- ex 8
 SELECT
-  e.numemp AS "NUMERO EMPREGADO",
-  e.nomeemp AS "NOME EMPREGADO",
-  em.numemp AS "NUMERO DO SEU CHEFE",
-  em.nomeemp AS "NOME CHEFE"
+	e.numemp AS "NUMERO EMPREGADO",
+	e.nomeemp AS "NOME EMPREGADO",
+	em.numemp AS "NUMERO DO SEU CHEFE",
+	em.nomeemp AS "NOME CHEFE"
 FROM empregado e
-  JOIN empregado em ON em.numemp = e.chefe
+	JOIN empregado em ON em.numemp = e.chefe
 ORDER BY em.numemp;
 
 -- ex 11
 SELECT e.nomeemp, d.numdep, d.nomedep, d.localizacao
 FROM empregado e
-  RIGHT JOIN departamento d ON e.numdep = d.numdep;
-  
+	RIGHT JOIN departamento d ON e.numdep = d.numdep;
+	
 -- ex 14
 SELECT d.numdep
 FROM empregado e
@@ -288,13 +316,103 @@ GROUP BY funcao
 ORDER BY funcao;
 
 -- ex 20
-SELECT SUM((salario * 14) + NVL(comissao, 0)) AS "Remuneracao Salarial Anual"
+SELECT SUM((salario * 14) + comissao) AS "Remuneracao Salarial Anual"
 FROM empregado
-WHERE funcao = 'Vendedor' AND comissao IS NOT NULL AND comissao > 0;
+WHERE funcao = 'Vendedor' AND comissao > 0;
 
 -- ex 23
-SELECT numdep, funcao, MAX(salario), MIN(salario), AVG(salario)
+SELECT
+	numdep,
+	funcao,
+	MAX(salario),
+	MIN(salario),
+	TO_CHAR(AVG(salario), '99G999D99MI')
 FROM empregado
+WHERE numdep = 20 OR numdep = 30
 GROUP BY funcao, numdep
-HAVING numdep = 20 OR numdep = 30
 ORDER BY numdep DESC, funcao ASC;
+
+-- ficha 5
+
+-- ex1
+SELECT nomeemp, numdep, salario
+FROM empregado
+WHERE salario > (SELECT AVG(salario) FROM empregado);
+
+-- ex2
+SELECT nomedep
+FROM departamento d
+JOIN empregado e ON d.numdep = e.numdep
+WHERE e.salario = (
+	SELECT MIN(salario)
+	FROM empregado
+);
+
+-- ex3
+SELECT nomedep
+FROM departamento d
+JOIN empregado e ON d.numdep = e.numdep
+GROUP BY nomedep
+HAVING AVG(salario) < (
+	SELECT AVG(salario)
+	FROM empregado
+);
+
+-- ex4
+SELECT nomedep
+FROM departamento d
+WHERE numdep NOT IN (
+	SELECT numdep
+	FROM empregado
+	GROUP BY numdep
+);
+
+-- ex5
+SELECT COUNT(*) AS "Numero de chefes"
+FROM (
+	SELECT chefe
+	FROM empregado
+	WHERE chefe IS NOT NULL
+	GROUP BY chefe
+);
+
+-- ex7
+SELECT COUNT(*) AS "Dept com mais de 3 Emp."
+FROM (
+	SELECT COUNT(numdep)
+	FROM empregado
+	GROUP BY numdep
+	HAVING COUNT(numdep) > 3
+);
+
+-- ex 8
+SELECT
+	e.nomeemp,
+	e.numdep,
+	e.salario
+FROM empregado e
+JOIN (
+	SELECT
+		AVG(salario) AS "avg_salario",
+		numdep
+	FROM empregado
+	GROUP BY numdep
+) s
+ON e.numdep = s.numdep
+WHERE e.salario > s."avg_salario"
+ORDER BY
+	e.numdep ASC,
+	e.salario DESC;
+
+-- ex10 FIXME: Wrong query
+SELECT
+	numdep,
+	MAX("encargoar")
+FROM (
+	SELECT
+		numdep,
+		SUM(12*salario) AS "encargoar"
+	FROM empregado
+	GROUP BY numdep
+)
+GROUP BY numdep;
