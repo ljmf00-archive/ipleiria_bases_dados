@@ -42,6 +42,14 @@ FROM empregado e
 JOIN escala_salarial es ON es.minsal <= e.salario AND es.maxsal >= e.salario
 ORDER BY e.salario DESC;
 
+-- ex5
+SELECT
+	e.nomeemp AS "NOME_EMP",
+	es.escala
+FROM empregado e
+JOIN escala_salarial es ON es.minsal <= e.salario AND es.maxsal >= e.salario
+WHERE escala = 3;
+
 -- ex6
 SELECT
 	e.nomeemp,
@@ -55,6 +63,19 @@ JOIN departamento d ON d.numdep = e.numdep
 WHERE e.funcao <> 'Analista'
 ORDER BY e.salario DESC, e.nomeemp DESC;
 
+-- ex 7
+SELECT
+	e.nomeemp,
+	e.funcao,
+	(e.salario * 14 + NVL(e.comissao, 0)) AS "Remuneracao Anual",
+	es.escala,
+	d.nomedep
+FROM empregado e
+JOIN escala_salarial es ON es.minsal <= e.salario AND es.maxsal >= e.salario
+JOIN departamento d ON d.numdep = e.numdep
+WHERE e.funcao = 'Escriturário' OR (e.salario * 12) >= 36000
+ORDER BY "Remuneracao Anual" DESC;
+
 -- ex 8
 SELECT
 	e.numemp AS "NUMERO EMPREGADO",
@@ -63,13 +84,61 @@ SELECT
 	em.nomeemp AS "NOME CHEFE"
 FROM empregado e
 	JOIN empregado em ON em.numemp = e.chefe
-ORDER BY em.numemp;
+ORDER BY em.numemp, e.nomeemp;
+
+-- ex 9
+SELECT
+	e.numemp AS "NUM_FUNC",
+	e.nomeemp AS "NOME_FUNC",
+	TO_CHAR(e.dtacontratacao, 'YYYY.MM.DD') AS "DATA_FUNC",
+	em.numemp AS "NUM_CHEFE",
+	em.nomeemp AS "NOME_CHEFE",
+	TO_CHAR(em.dtacontratacao, 'YYYY.MM.DD') AS "DATA_CHEFE"
+FROM empregado e
+JOIN empregado em ON em.numemp = e.chefe
+WHERE MONTHS_BETWEEN(em.dtacontratacao, e.dtacontratacao) > 0
+ORDER BY e.nomeemp;
+
+-- ex 10
+SELECT
+	e.numemp AS "NUM_FUNC",
+	e.nomeemp AS "NOME_FUNC",
+	TO_CHAR(e.dtacontratacao, 'YYYY.MM.DD') AS "DATA_FUNC",
+	em.numemp AS "NUM_CHEFE",
+	em.nomeemp AS "NOME_CHEFE",
+	TO_CHAR(em.dtacontratacao, 'YYYY.MM.DD') AS "DATA_CHEFE"
+FROM empregado e
+LEFT JOIN empregado em ON em.numemp = e.chefe
+WHERE MONTHS_BETWEEN(em.dtacontratacao, e.dtacontratacao) > 0
+	OR e.funcao = 'Presidente'
+ORDER BY e.nomeemp;
 
 -- ex 11
-SELECT e.nomeemp, d.numdep, d.nomedep, d.localizacao
+SELECT
+	e.nomeemp,
+	d.numdep,
+	d.nomedep,
+	d.localizacao
 FROM empregado e
-	RIGHT JOIN departamento d ON e.numdep = d.numdep;
-	
+RIGHT JOIN departamento d ON e.numdep = d.numdep;
+
+-- ex 12
+SELECT
+	e.nomeemp AS "NOME_EMP",
+	EXTRACT(YEAR FROM e.dtacontratacao) AS "ANO_EMP",
+	em.nomeemp AS "NOME_CHEFE",
+	EXTRACT(YEAR FROM em.dtacontratacao) AS "ANO_CHEFE"
+FROM empregado e
+JOIN empregado em ON em.numemp = e.chefe
+WHERE EXTRACT(YEAR FROM e.dtacontratacao) = EXTRACT(YEAR FROM em.dtacontratacao)
+ORDER BY "NOME_EMP";
+
+-- ex 13
+SELECT DISTINCT d.localizacao
+FROM departamento d
+JOIN empregado e ON d.numdep = e.numdep
+WHERE e.funcao = 'Director';
+
 -- ex 14
 SELECT d.numdep
 FROM empregado e
