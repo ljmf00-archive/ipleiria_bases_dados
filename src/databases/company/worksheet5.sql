@@ -105,17 +105,27 @@ ORDER BY
 	e.numdep ASC,
 	e.salario DESC;
 
--- ex10 FIXME:
+-- ex10
 SELECT
 	numdep,
-	(SELECT MAX("encargoar") FROM s)
+	"encargoar"
 FROM (
 	SELECT
 		numdep,
 		SUM(12*salario) AS "encargoar"
 	FROM empregado
 	GROUP BY numdep
-) s;
+)
+WHERE "encargoar" = (
+	SELECT MAX("encargoar")
+	FROM (
+		SELECT
+			numdep,
+			SUM(12*salario) AS "encargoar"
+		FROM empregado
+		GROUP BY numdep
+	)
+);
 
 -- ex11
 SELECT
