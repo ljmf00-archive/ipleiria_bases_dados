@@ -183,7 +183,7 @@ SELECT
 	TO_CHAR(dtacontratacao, 'DD-MM-YYYY') AS "Data de contratacao",
 	TRUNC(MONTHS_BETWEEN(SYSDATE,dtacontratacao)/12, 0) || ' anos e '
 		|| TRUNC(MOD(MONTHS_BETWEEN(SYSDATE,dtacontratacao), 12), 0)
-		|| ' meses de servico'
+		|| ' meses de servico' AS "Tempo de Servico"
 FROM empregado
 ORDER BY nomeemp;
 
