@@ -144,3 +144,30 @@ SELECT d.numdep
 FROM empregado e
 RIGHT JOIN departamento d ON d.numdep = e.numdep
 WHERE e.numdep IS NULL;
+
+-- ex 15
+SELECT 'COM chefe: ' || COUNT(chefe) AS "#empregados"
+FROM empregado
+UNION
+	SELECT 'SEM chefe: ' || COUNT(*)
+	FROM empregado
+WHERE chefe IS NULL;
+
+-- ex 19
+SELECT
+	hf.numemp,
+	hf.funcao,
+	'Exerceu durante ' || TRUNC(MONTHS_BETWEEN(hf.dtafim, hf.dtainicio),0) || ' meses' AS "Duracao",
+	d.nomedep
+FROM historico_funcao hf
+FULL OUTER JOIN empregado e ON e.numemp = hf.numemp
+JOIN departamento d ON d.numdep = hf.numdep
+UNION
+SELECT
+	e.numemp,
+	e.funcao,
+	'A exercer ha ' || TRUNC(MONTHS_BETWEEN(SYSDATE, e.dtacontratacao),0) || ' meses' AS "Duracao",
+	d.nomedep
+FROM empregado e
+JOIN departamento d ON d.numdep = e.numdep
+ORDER BY numemp, funcao;
