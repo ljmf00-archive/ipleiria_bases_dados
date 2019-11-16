@@ -77,6 +77,9 @@ FROM (
 SELECT COUNT(DISTINCT chefe) AS "Numero de chefes"
 FROM empregado;
 
+-- ex6
+
+
 -- ex7
 SELECT COUNT(*) AS "Dept com mais de 3 Emp."
 FROM (
