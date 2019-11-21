@@ -28,8 +28,19 @@ INSERT INTO conta_cliente (idCliente, idConta, titular) VALUES (11001, 1733, 'N'
 INSERT INTO conta_cliente (idCliente, idConta, titular) VALUES (11009, 2009, 'S');
 INSERT INTO conta_cliente (idCliente, idConta, titular) VALUES (11001, 2017, 'S');
 
--- FIXME: hours on date
--- TODO: Add other entries into the tables
--- INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (1, TO_DATE('29-10-2017 2:00:50','dd-mm-yyyy'), 11001)
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (1, TO_DATE('29-10-2017 14:00:50','dd-mm-yyyy HH24:MI:SS'), 11001);
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (2, TO_DATE('01-11-2017 16:10:30','dd-mm-yyyy HH24:MI:SS'), 13006);
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (3, TO_DATE('01-11-2017 18:15:41','dd-mm-yyyy HH24:MI:SS'), 11001);
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (4, TO_DATE('02-11-2017 10:11:20','dd-mm-yyyy HH24:MI:SS'), 11009);
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (4, TO_DATE('02-11-2017 10:15:00','dd-mm-yyyy HH24:MI:SS'), 11001);
+INSERT INTO operacao (id, dataOp, idCliente, idConta) VALUES (4, TO_DATE('03-11-2017 9:30:00','dd-mm-yyyy HH24:MI:SS'), 11009);
+
+INSERT INTO op_fecho (idOpF, razao) VALUES (1, 'A pedido do cliente');
+INSERT INTO op_fecho (idOpF, razao) VALUES (5, 'A pedido do cliente');
+
+INSERT INTO op_deplev (idOpDL, quantia) VALUES (2, 50);
+INSERT INTO op_deplev (idOpDL, quantia) VALUES (3, 150);
+INSERT INTO op_deplev (idOpDL, quantia) VALUES (4, -45);
+INSERT INTO op_deplev (idOpDL, quantia) VALUES (5, -20);
 
 COMMIT;
